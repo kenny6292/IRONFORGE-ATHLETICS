@@ -1,0 +1,1 @@
+export default function NotFound(){return <main className="page"><p className="eyebrow">IRONFORGE / 404</p><h1>PAGE <i>NOT FOUND.</i></h1><p className="pageLead">The page you requested does not exist.</p><a className="btn primary" href="/">RETURN HOME</a></main>}
