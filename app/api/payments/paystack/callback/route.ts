@@ -9,7 +9,11 @@ export async function GET(request:Request){
  const result=await response.json();
  const supabase=await createClient();
  if(response.ok&&result.status&&result.data?.status==="success"){
-  await supabase.from("payments").update({status:"successful",metadata:result.data}).eq("reference",reference);
+  const {error}=await supabase.from("payments").update({status:"successful",metadata:result.data}).eq("reference",reference);
+  if(!error){
+   const {error:activationError}=await supabase.rpc("activate_membership_for_payment",{p_reference:reference});
+   if(activationError) return NextResponse.redirect(new URL("/membership?payment=activation_error",url.origin));
+  }
   return NextResponse.redirect(new URL(`/membership?payment=success&reference=${encodeURIComponent(reference)}`,url.origin));
  }
  await supabase.from("payments").update({status:"failed",metadata:result.data||{}}).eq("reference",reference);
