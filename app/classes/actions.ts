@@ -1,22 +1,21 @@
 "use server";
+
 import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 
 export async function bookClass(classId:string){
  const supabase=await createClient();
  const {data:{user}}=await supabase.auth.getUser();
- if(!user) redirect("/login?next=/classes");
- const {data:existing}=await supabase.from("class_bookings").select("id,status").eq("class_id",classId).eq("user_id",user.id).maybeSingle();
- if(existing?.status==="confirmed") return {ok:true,message:"You are already booked for this class."};
- const {error}=await supabase.from("class_bookings").upsert({class_id:classId,user_id:user.id,status:"confirmed"},{onConflict:"class_id,user_id"});
- if(error) return {ok:false,error:"Unable to reserve this class. Please try again."};
- return {ok:true,message:"Class reserved successfully."};
+ if(!user)return {ok:false,error:"Please log in before booking a class."};
+ const {data,error}=await supabase.rpc("book_class",{p_class_id:classId});
+ if(error)return {ok:false,error:error.message};
+ return {ok:true,message:data||"Class booked successfully."};
 }
+
 export async function cancelClass(classId:string){
  const supabase=await createClient();
  const {data:{user}}=await supabase.auth.getUser();
- if(!user) redirect("/login?next=/classes");
- const {error}=await supabase.from("class_bookings").update({status:"cancelled"}).eq("class_id",classId).eq("user_id",user.id);
- if(error) return {ok:false,error:"Unable to cancel this booking."};
+ if(!user)return {ok:false,error:"Please log in before cancelling a booking."};
+ const {error}=await supabase.from("class_bookings").update({status:"cancelled"}).eq("class_id",classId).eq("user_id",user.id).eq("status","confirmed");
+ if(error)return {ok:false,error:error.message};
  return {ok:true,message:"Booking cancelled."};
 }
