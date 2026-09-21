@@ -3,13 +3,14 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function POST(request:Request){
  try{
-  const {planId}=await request.json();
-  if(!planId) return NextResponse.json({error:"planId is required"},{status:400});
+  const {planId,planName}=await request.json();
+  if(!planId&&!planName) return NextResponse.json({error:"planId or planName is required"},{status:400});
   const supabase=await createClient();
   const {data:{user}}=await supabase.auth.getUser();
   if(!user) return NextResponse.json({error:"Authentication required"},{status:401});
   if(!process.env.PAYSTACK_SECRET_KEY) return NextResponse.json({error:"Paystack is not configured."},{status:503});
-  const {data:plan,error:planError}=await supabase.from("membership_plans").select("id,name,price_ngn,active").eq("id",planId).eq("active",true).single();
+  const query=supabase.from("membership_plans").select("id,name,price_ngn,active").eq("active",true);
+  const {data:plan,error:planError}=planId?await query.eq("id",planId).single():await query.ilike("name",String(planName)).single();
   if(planError||!plan) return NextResponse.json({error:"Membership plan not found."},{status:404});
   const reference=`IRONFORGE-${crypto.randomUUID()}`;
   const {error:paymentError}=await supabase.from("payments").insert({user_id:user.id,provider:"paystack",reference,amount_ngn:plan.price_ngn,status:"pending",metadata:{plan_id:plan.id,plan_name:plan.name}});
