@@ -1,0 +1,33 @@
+create table if not exists public.profiles (id uuid primary key references auth.users(id) on delete cascade, full_name text, phone text, role text not null default 'member' check (role in ('member','coach','admin')), avatar_url text, created_at timestamptz not null default now(), updated_at timestamptz not null default now());
+create table if not exists public.membership_plans (id uuid primary key default gen_random_uuid(), name text not null unique, price_ngn integer not null check (price_ngn >= 0), billing_period text not null default 'monthly', description text, features jsonb not null default '[]'::jsonb, active boolean not null default true, created_at timestamptz not null default now());
+create table if not exists public.memberships (id uuid primary key default gen_random_uuid(), user_id uuid not null references public.profiles(id) on delete cascade, plan_id uuid not null references public.membership_plans(id), status text not null default 'pending' check (status in ('pending','active','paused','cancelled','expired')), starts_at timestamptz, ends_at timestamptz, created_at timestamptz not null default now());
+create table if not exists public.trainers (id uuid primary key default gen_random_uuid(), name text not null, specialty text not null, bio text, image_url text, active boolean not null default true, created_at timestamptz not null default now());
+create table if not exists public.classes (id uuid primary key default gen_random_uuid(), name text not null, description text, day_of_week smallint not null check(day_of_week between 0 and 6), start_time time not null, duration_minutes integer not null default 60 check(duration_minutes > 0), capacity integer not null default 20 check(capacity > 0), trainer_id uuid references public.trainers(id), active boolean not null default true, created_at timestamptz not null default now());
+create table if not exists public.class_bookings (id uuid primary key default gen_random_uuid(), class_id uuid not null references public.classes(id) on delete cascade, user_id uuid not null references public.profiles(id) on delete cascade, booked_at timestamptz not null default now(), status text not null default 'confirmed' check(status in ('confirmed','cancelled')), unique(class_id,user_id));
+create table if not exists public.personal_training_requests (id uuid primary key default gen_random_uuid(), user_id uuid references public.profiles(id) on delete set null, name text not null, email text not null, phone text, goals text, preferred_time text, status text not null default 'new' check(status in ('new','contacted','scheduled','closed')), created_at timestamptz not null default now());
+create table if not exists public.contact_messages (id uuid primary key default gen_random_uuid(), name text not null, email text not null, phone text, subject text, message text not null, status text not null default 'new' check(status in ('new','read','resolved')), created_at timestamptz not null default now());
+create table if not exists public.payments (id uuid primary key default gen_random_uuid(), user_id uuid references public.profiles(id) on delete set null, membership_id uuid references public.memberships(id) on delete set null, provider text not null check(provider in ('paystack','flutterwave')), reference text not null unique, amount_ngn integer not null check(amount_ngn > 0), status text not null default 'pending' check(status in ('pending','successful','failed','refunded')), metadata jsonb not null default '{}'::jsonb, created_at timestamptz not null default now());
+
+alter table public.profiles enable row level security;
+alter table public.membership_plans enable row level security;
+alter table public.memberships enable row level security;
+alter table public.trainers enable row level security;
+alter table public.classes enable row level security;
+alter table public.class_bookings enable row level security;
+alter table public.personal_training_requests enable row level security;
+alter table public.contact_messages enable row level security;
+alter table public.payments enable row level security;
+
+create policy "public active plans" on public.membership_plans for select to anon, authenticated using (active = true);
+create policy "public active trainers" on public.trainers for select to anon, authenticated using (active = true);
+create policy "public active classes" on public.classes for select to anon, authenticated using (active = true);
+create policy "users own profile" on public.profiles for select to authenticated using ((select auth.uid()) = id);
+create policy "users create own profile" on public.profiles for insert to authenticated with check ((select auth.uid()) = id);
+create policy "users update own profile" on public.profiles for update to authenticated using ((select auth.uid()) = id) with check ((select auth.uid()) = id);
+create policy "users own memberships" on public.memberships for select to authenticated using ((select auth.uid()) = user_id);
+create policy "users own bookings" on public.class_bookings for select to authenticated using ((select auth.uid()) = user_id);
+create policy "users create bookings" on public.class_bookings for insert to authenticated with check ((select auth.uid()) = user_id);
+create policy "users cancel bookings" on public.class_bookings for update to authenticated using ((select auth.uid()) = user_id) with check ((select auth.uid()) = user_id);
+create policy "users own payments" on public.payments for select to authenticated using ((select auth.uid()) = user_id);
+create policy "public contact insert" on public.contact_messages for insert to anon, authenticated with check (char_length(name) between 2 and 120 and char_length(email) between 5 and 320 and char_length(message) between 1 and 5000);
+create policy "public PT request insert" on public.personal_training_requests for insert to anon, authenticated with check (char_length(name) between 2 and 120 and char_length(email) between 5 and 320 and char_length(goals) <= 5000);
