@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient } from "../../../lib/supabase/server";
 import { redirect } from "next/navigation";
 import { savePlan,deletePlan,saveTrainer,deleteTrainer,saveClass,deleteClass,updateBooking,updateMessage,updateTrainingRequest } from "../actions";
 
