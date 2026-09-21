@@ -1,0 +1,1 @@
+export default function Loading(){return <main className="page"><p className="eyebrow">IRONFORGE / MANAGEMENT</p><h1>LOADING <i>CONTROL.</i></h1><p className="pageLead">Loading live operational data…</p></main>}
