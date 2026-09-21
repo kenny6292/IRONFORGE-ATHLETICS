@@ -1,0 +1,1 @@
+export default function Loading(){return <main className="page"><p className="eyebrow">IRONFORGE / LOADING</p><h1>LOADING <i>IRON.</i></h1><p className="pageLead">Preparing your experience…</p></main>}
