@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 
+const base = process.env.NEXT_PUBLIC_SITE_URL || "https://ironforge-athletics-deyoungtech.vercel.app";
+
 export default function robots(): MetadataRoute.Robots {
- return { rules: { userAgent: "*", allow: "/" }, sitemap: "https://ironforge-athletics.vercel.app/sitemap.xml" };
+  return { rules: { userAgent: "*", allow: "/" }, sitemap: `${base}/sitemap.xml` };
 }
