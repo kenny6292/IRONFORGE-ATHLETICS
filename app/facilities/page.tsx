@@ -1,1 +1,17 @@
-export default function Page(){return <main className="page"><a className="back" href="/">← HOME</a><p className="eyebrow">IRONFORGE / FACILITIES</p><h1>FACILITIES <i></i></h1><p className="pageLead">Explore the IRONFORGE facilities experience.</p><section className="pageGrid"><article><span className="num">IRONFORGE</span><h2>STRENGTH FLOOR</h2><p>Power racks, free weights and dedicated strength stations.</p><a className="textLink" href="/#contact">EXPLORE →</a></article><article><span className="num">IRONFORGE</span><h2>CONDITIONING ZONE</h2><p>Sleds, rowers, bikes and functional training equipment.</p><a className="textLink" href="/#contact">EXPLORE →</a></article><article><span className="num">IRONFORGE</span><h2>BOXING STUDIO</h2><p>Dedicated space for technical and conditioning sessions.</p><a className="textLink" href="/#contact">EXPLORE →</a></article><article><span className="num">IRONFORGE</span><h2>RECOVERY AREA</h2><p>A focused environment for cooldown and recovery work.</p><a className="textLink" href="/#contact">EXPLORE →</a></article></section><a className="btn primary" href="/#membership">START TRAINING →</a></main>
+export default function Page() {
+  return (
+    <main className="page">
+      <a className="back" href="/">← HOME</a>
+      <p className="eyebrow">IRONFORGE / FACILITIES</p>
+      <h1>FACILITIES <i></i></h1>
+      <p className="pageLead">Explore the IRONFORGE facilities experience.</p>
+      <section className="pageGrid">
+        <article><span className="num">IRONFORGE</span><h2>STRENGTH FLOOR</h2><p>Power racks, free weights and dedicated strength stations.</p><a className="textLink" href="/#contact">EXPLORE →</a></article>
+        <article><span className="num">IRONFORGE</span><h2>CONDITIONING ZONE</h2><p>Sleds, rowers, bikes and functional training equipment.</p><a className="textLink" href="/#contact">EXPLORE →</a></article>
+        <article><span className="num">IRONFORGE</span><h2>BOXING STUDIO</h2><p>Dedicated space for technical and conditioning sessions.</p><a className="textLink" href="/#contact">EXPLORE →</a></article>
+        <article><span className="num">IRONFORGE</span><h2>RECOVERY AREA</h2><p>A focused environment for cooldown and recovery work.</p><a className="textLink" href="/#contact">EXPLORE →</a></article>
+      </section>
+      <a className="btn primary" href="/#membership">START TRAINING →</a>
+    </main>
+  );
+}
