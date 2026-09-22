@@ -15,7 +15,8 @@ export default async function MemberPage() {
     supabase.from("memberships").select("id,status,starts_at,ends_at,membership_plans(name,price_ngn,billing_period)").eq("user_id", user.id).order("created_at", { ascending: false }).limit(5),
     supabase.from("class_bookings").select("id,booked_at,status,classes(name,start_time,day_of_week,duration_minutes,trainers(name))").eq("user_id", user.id).order("booked_at", { ascending: false }).limit(12),
     supabase.from("payments").select("id,provider,reference,amount_ngn,status,created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(8),
-    supabase.from("attendance").select("id,checked_in_at,method,classes(name)").eq("user_id", user.id).order("checked_in_at", { ascending: false }).limit(20)
+    supabase.from("attendance").select("id,checked_in_at,method,classes(name)").eq("user_id", user.id).order("checked_in_at", { ascending: false }).limit(20),
+    supabase.from("workout_logs").select("id,exercise,sets,reps,weight_kg,duration_seconds,notes,completed_at").eq("user_id", user.id).order("completed_at", { ascending: false }).limit(20)
   ]);
 
   const active = memberships?.find(m => m.status === "active") || memberships?.[0];
