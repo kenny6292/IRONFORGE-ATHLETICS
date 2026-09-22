@@ -10,11 +10,12 @@ export default async function MemberPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/member");
 
-  const [{ data: profile }, { data: memberships }, { data: bookings }, { data: payments }] = await Promise.all([
+  const [{ data: profile }, { data: memberships }, { data: bookings }, { data: payments }, { data: attendance }] = await Promise.all([
     supabase.from("profiles").select("full_name,phone,role").eq("id", user.id).maybeSingle(),
     supabase.from("memberships").select("id,status,starts_at,ends_at,membership_plans(name,price_ngn,billing_period)").eq("user_id", user.id).order("created_at", { ascending: false }).limit(5),
     supabase.from("class_bookings").select("id,booked_at,status,classes(name,start_time,day_of_week,duration_minutes,trainers(name))").eq("user_id", user.id).order("booked_at", { ascending: false }).limit(12),
-    supabase.from("payments").select("id,provider,reference,amount_ngn,status,created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(8)
+    supabase.from("payments").select("id,provider,reference,amount_ngn,status,created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(8),
+    supabase.from("attendance").select("id,checked_in_at,method,classes(name)").eq("user_id", user.id).order("checked_in_at", { ascending: false }).limit(20)
   ]);
 
   const active = memberships?.find(m => m.status === "active") || memberships?.[0];
@@ -51,6 +52,8 @@ export default async function MemberPage() {
     <section className="memberPanel"><div className="sectionHead"><div><p className="eyebrow">TRAINING</p><h2>MY <i>CLASSES.</i></h2></div><a className="textLink" href="/classes">VIEW SCHEDULE →</a></div><div className="memberList">
       {bookings?.length ? bookings.map(b => { const cls = Array.isArray(b.classes) ? b.classes[0] : b.classes; const trainer = cls && Array.isArray(cls.trainers) ? cls.trainers[0] : cls?.trainers; return <div className="memberRow" key={b.id}><div><strong>{cls?.name || "Class"}</strong><span>{cls?.day_of_week !== undefined ? dayNames[Number(cls.day_of_week)] : "Scheduled"} · {cls?.start_time?.slice(0,5) || "—"} · {trainer?.name || "IRONFORGE"}</span></div><span className={`statusBadge ${b.status}`}>{b.status}</span>{b.status === "confirmed" ? <form action={cancelMemberBooking}><input type="hidden" name="id" value={b.id}/><button className="btn btnGhost smallBtn" type="submit">CANCEL</button></form> : <span/>}</div>; }) : <p className="emptyState">You have no class bookings yet.</p>}
     </div></section>
+
+    <section className="memberPanel"><div className="sectionHead"><div><p className="eyebrow">ATTENDANCE</p><h2>TRAINING <i>VISITS.</i></h2></div></div><div className="memberList">{attendance?.length ? attendance.map(a => { const cls = Array.isArray(a.classes) ? a.classes[0] : a.classes; return <div className="memberRow" key={a.id}><div><strong>{cls?.name || "Gym visit"}</strong><span>{new Date(a.checked_in_at).toLocaleString()}</span></div><span className="statusBadge active">{a.method}</span><span/></div>; }) : <p className="emptyState">No attendance records yet.</p>}</div></section>
 
     <section className="memberPanel"><div className="sectionHead"><div><p className="eyebrow">TRANSACTIONS</p><h2>PAYMENT <i>HISTORY.</i></h2></div></div><div className="memberList">
       {payments?.length ? payments.map(p => <div className="memberRow" key={p.id}><div><strong>{money(p.amount_ngn)}</strong><span>{p.provider.toUpperCase()} · {new Date(p.created_at).toLocaleDateString()}</span></div><span className={`statusBadge ${p.status}`}>{p.status}</span><span className="reference">{p.reference}</span></div>) : <p className="emptyState">No payment transactions yet.</p>}
