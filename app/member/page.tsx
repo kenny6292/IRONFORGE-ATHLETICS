@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import { cancelMemberBooking, updateMemberProfile } from "./actions";
+import { cancelMemberBooking, updateMemberProfile, addWorkoutLog, deleteWorkoutLog } from "./actions";
 
 const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 const money = (value: number | null | undefined) => `₦${Number(value || 0).toLocaleString()}`;
@@ -10,7 +10,7 @@ export default async function MemberPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect("/login?next=/member");
 
-  const [{ data: profile }, { data: memberships }, { data: bookings }, { data: payments }, { data: attendance }] = await Promise.all([
+  const [{ data: profile }, { data: memberships }, { data: bookings }, { data: payments }, { data: attendance }, { data: workouts }] = await Promise.all([
     supabase.from("profiles").select("full_name,phone,role").eq("id", user.id).maybeSingle(),
     supabase.from("memberships").select("id,status,starts_at,ends_at,membership_plans(name,price_ngn,billing_period)").eq("user_id", user.id).order("created_at", { ascending: false }).limit(5),
     supabase.from("class_bookings").select("id,booked_at,status,classes(name,start_time,day_of_week,duration_minutes,trainers(name))").eq("user_id", user.id).order("booked_at", { ascending: false }).limit(12),
@@ -54,6 +54,21 @@ export default async function MemberPage() {
     </div></section>
 
     <section className="memberPanel"><div className="sectionHead"><div><p className="eyebrow">ATTENDANCE</p><h2>TRAINING <i>VISITS.</i></h2></div></div><div className="memberList">{attendance?.length ? attendance.map(a => { const cls = Array.isArray(a.classes) ? a.classes[0] : a.classes; return <div className="memberRow" key={a.id}><div><strong>{cls?.name || "Gym visit"}</strong><span>{new Date(a.checked_in_at).toLocaleString()}</span></div><span className="statusBadge active">{a.method}</span><span/></div>; }) : <p className="emptyState">No attendance records yet.</p>}</div></section>
+
+    <section className="memberPanel"><div className="sectionHead"><div><p className="eyebrow">WORKOUT TRACKING</p><h2>LOG YOUR <i>WORKOUT.</i></h2></div></div>
+      <form action={addWorkoutLog} className="memberForm workoutForm">
+        <label>EXERCISE<input name="exercise" placeholder="Bench Press" required minLength={2} maxLength={120}/></label>
+        <label>SETS<input name="sets" type="number" min="1" max="100" placeholder="4"/></label>
+        <label>REPS<input name="reps" type="number" min="1" max="1000" placeholder="10"/></label>
+        <label>WEIGHT (KG)<input name="weight_kg" type="number" min="0" step="0.01" placeholder="60"/></label>
+        <label>DURATION (SEC)<input name="duration_seconds" type="number" min="1" max="86400" placeholder="1800"/></label>
+        <label>NOTES<textarea name="notes" maxLength={500} placeholder="Technique, intensity, or progression notes"/></label>
+        <button className="btn primary" type="submit">SAVE WORKOUT</button>
+      </form>
+      <div className="memberList">
+        {workouts?.length ? workouts.map(w => <div className="memberRow" key={w.id}><div><strong>{w.exercise}</strong><span>{new Date(w.completed_at).toLocaleString()} · {w.sets ? `${w.sets} sets` : "—"} · {w.reps ? `${w.reps} reps` : "—"} · {w.weight_kg !== null ? `${w.weight_kg} kg` : "bodyweight"}{w.duration_seconds ? ` · ${Math.round(w.duration_seconds/60)} min` : ""}</span>{w.notes && <small>{w.notes}</small>}</div><form action={deleteWorkoutLog}><input type="hidden" name="id" value={w.id}/><button className="btn btnGhost smallBtn" type="submit">DELETE</button></form></div>) : <p className="emptyState">No workouts logged yet. Record your first session above.</p>}
+      </div>
+    </section>
 
     <section className="memberPanel"><div className="sectionHead"><div><p className="eyebrow">TRANSACTIONS</p><h2>PAYMENT <i>HISTORY.</i></h2></div></div><div className="memberList">
       {payments?.length ? payments.map(p => <div className="memberRow" key={p.id}><div><strong>{money(p.amount_ngn)}</strong><span>{p.provider.toUpperCase()} · {new Date(p.created_at).toLocaleDateString()}</span></div><span className={`statusBadge ${p.status}`}>{p.status}</span><span className="reference">{p.reference}</span></div>) : <p className="emptyState">No payment transactions yet.</p>}
