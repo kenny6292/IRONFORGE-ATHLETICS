@@ -43,3 +43,13 @@ export async function updateTrainingRequest(formData:FormData){const supabase=aw
 export async function updateMemberRole(formData:FormData){const supabase=await requireAdmin();const role=String(formData.get("role"));if(!["member","coach","admin"].includes(role))throw new Error("Invalid role.");const {error}=await supabase.from("profiles").update({role}).eq("id",String(formData.get("id")));if(error)throw new Error(error.message);revalidatePath("/admin");revalidatePath("/admin/members");}
 export async function updateMembershipStatus(formData:FormData){const supabase=await requireAdmin();const status=String(formData.get("status"));if(!["pending","active","paused","cancelled","expired"].includes(status))throw new Error("Invalid membership status.");const {error}=await supabase.from("memberships").update({status}).eq("id",String(formData.get("id")));if(error)throw new Error(error.message);revalidatePath("/admin");revalidatePath("/admin/members");}
 export async function updatePaymentStatus(formData:FormData){const supabase=await requireAdmin();const status=String(formData.get("status"));if(!["pending","successful","failed","refunded"].includes(status))throw new Error("Invalid payment status.");const {error}=await supabase.from("payments").update({status}).eq("id",String(formData.get("id")));if(error)throw new Error(error.message);revalidatePath("/admin");revalidatePath("/admin/members");}
+
+export async function checkInMember(formData: FormData) {
+ const supabase=await requireAdmin();
+ const userId=String(formData.get("user_id")||"");
+ const classId=String(formData.get("class_id")||"")||null;
+ if(!userId) throw new Error("Member is required.");
+ const {error}=await supabase.from("attendance").insert({user_id:userId,class_id:classId,checked_in_by:(await supabase.auth.getUser()).data.user?.id,method:"admin"});
+ if(error) throw new Error(error.message);
+ revalidatePath("/admin/management"); revalidatePath("/member");
+}
