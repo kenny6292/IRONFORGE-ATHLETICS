@@ -90,3 +90,9 @@ input,textarea,select{max-width:100%;font-size:16px}
   .memberPanel{padding:20px}
   .contactBox span{font-size:11px}
 }
+
+
+.homeIntro{padding:90px 7vw;display:grid;grid-template-columns:1fr 1fr;gap:70px;border-top:1px solid var(--line);background:#101010}
+.homeIntro h2{font-size:clamp(45px,6vw,78px)}
+.homeIntro>p{color:var(--muted);line-height:1.8;max-width:520px;align-self:end}
+@media(max-width:700px){.homeIntro{grid-template-columns:1fr;gap:30px;padding:70px 6vw}}
