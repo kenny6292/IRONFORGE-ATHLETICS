@@ -107,3 +107,53 @@ input,textarea,select{max-width:100%;font-size:16px}
   .hero h1{max-width:1200px}
   .homeIntro{padding-left:4vw;padding-right:4vw}
 }
+
+
+/* Premium motion system */
+@keyframes ironFadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ironFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes ironScaleIn{from{opacity:0;transform:scale(1.04)}to{opacity:1;transform:scale(1)}}
+@keyframes ironPulse{0%,100%{box-shadow:0 0 0 0 #ff5a1600}50%{box-shadow:0 0 0 10px #ff5a1600}}
+@keyframes ironShine{from{transform:translateX(-120%)}to{transform:translateX(120%)}}
+
+.nav{animation:ironFadeIn .7s ease both}
+.logo{transition:transform .25s ease}
+.logo:hover{transform:translateY(-2px)}
+.links>a{transition:color .25s ease,transform .25s ease}
+.links>a:not(.navCta):hover{transform:translateY(-2px)}
+.navCta,.btn{position:relative;overflow:hidden;transition:transform .25s ease,box-shadow .25s ease,background-color .25s ease}
+.navCta::after,.btn::after{content:"";position:absolute;inset:0;width:45%;background:linear-gradient(90deg,transparent,#ffffff35,transparent);transform:translateX(-140%);pointer-events:none}
+.navCta:hover::after,.btn:hover::after{animation:ironShine .7s ease}
+.navCta:hover,.btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px #0008}
+.primary:hover{background:#ff6b2d}
+.ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+.heroShade{animation:ironFadeIn 1.2s ease both}
+.heroContent{animation:ironFadeUp .9s cubic-bezier(.2,.7,.2,1) .12s both}
+.heroStat{animation:ironFadeUp .9s cubic-bezier(.2,.7,.2,1) .45s both}
+.hero .eyebrow{animation:ironFadeUp .7s ease .2s both}
+.hero h1{animation:ironFadeUp .8s ease .32s both}
+.hero .lead{animation:ironFadeUp .8s ease .42s both}
+.hero .actions{animation:ironFadeUp .8s ease .52s both}
+
+.homeIntro{animation:ironFadeIn .8s ease both}
+.card,.plan,.classRow,.memberPanel,.checkInCard{transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease}
+.card:hover,.plan:hover,.memberPanel:hover{transform:translateY(-7px);border-color:#ff5a1680;box-shadow:0 18px 45px #0008}
+.card:hover .icon{transform:scale(1.08);transition:transform .3s ease}
+.plan.featured{animation:ironPulse 2.8s ease-in-out infinite}
+.classRow:hover{transform:translateX(6px);border-bottom-color:#ff5a1680}
+.photo{transition:transform .8s ease}
+.split:hover .photo{transform:scale(1.025)}
+.textLink,.card>a{transition:gap .25s ease,color .25s ease}
+.textLink:hover,.card>a:hover{gap:13px;color:#ff6b2d}
+.contactBox>div{transition:padding-left .25s ease,border-color .25s ease}
+.contactBox>div:hover{padding-left:8px;border-bottom-color:var(--accent)}
+.checkMark.success{animation:ironScaleIn .5s ease both}
+
+@media(max-width:900px){
+  .card:hover,.plan:hover,.memberPanel:hover{transform:translateY(-4px)}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
