@@ -174,3 +174,42 @@ input,textarea,select{max-width:100%;font-size:16px}
 .featureTile:hover svg{transform:translateX(7px)}
 @media(max-width:900px){.featureHub{padding:90px 6vw}.featureGrid{grid-template-columns:1fr 1fr}}
 @media(max-width:600px){.featureHub{padding:70px 6vw}.featureGrid{grid-template-columns:1fr}.featureTile{min-height:220px}}
+
+
+/* Premium homepage treatment */
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 72% 45%,#ff5a1618 0,transparent 28%),linear-gradient(180deg,transparent 70%,#090909 100%)}
+.heroContent{z-index:2}
+.hero h1{max-width:1000px;text-shadow:0 8px 40px #000b}
+.hero .lead{font-size:15px}
+.heroStat{z-index:2;padding-left:28px;border-left:1px solid #ffffff45}
+.heroMeta{position:absolute;left:4vw;bottom:42px;z-index:2;display:flex;align-items:center;gap:14px;color:#aaa;font-size:8px;font-weight:800;letter-spacing:2px}
+.heroMeta b{width:28px;height:1px;background:var(--accent)}
+.heroScroll{position:absolute;right:4vw;bottom:42px;z-index:2;color:#aaa;font-size:8px;font-weight:800;letter-spacing:2px}
+.heroScroll span{color:var(--accent);margin-left:10px;font-size:13px}
+.homeIntro{position:relative}
+.homeIntro::before{content:"01";position:absolute;top:28px;right:4vw;font-size:9px;letter-spacing:2px;color:#444}
+.homeIntro>p{margin:0 0 25px}
+.premiumStats{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);max-width:650px;grid-column:1/-1}
+.premiumStats div{background:#101010;padding:24px 20px}
+.premiumStats strong{display:block;font-size:30px;letter-spacing:-1px}
+.premiumStats span{display:block;color:#666;font-size:8px;letter-spacing:1.7px;margin-top:7px}
+.featureHub{position:relative}
+.featureHub .sectionHead{max-width:1250px}
+.featureHub .sectionHead h2{letter-spacing:-4px}
+.featureTile{box-shadow:inset 0 1px #ffffff06}
+.featureTile::after{content:"";position:absolute;top:0;left:0;width:0;height:2px;background:var(--accent);transition:width .35s ease}
+.featureTile:hover::after{width:100%}
+
+@media(max-width:900px){
+  .heroMeta{left:6vw}
+  .heroScroll{right:6vw}
+}
+@media(max-width:600px){
+  .heroMeta{bottom:25px;left:6vw}
+  .heroScroll{display:none}
+  .heroStat{right:6vw;bottom:75px;padding-left:16px}
+  .heroStat strong{font-size:36px}
+  .premiumStats{grid-template-columns:1fr}
+  .premiumStats div{padding:18px}
+  .homeIntro::before{display:none}
+}
