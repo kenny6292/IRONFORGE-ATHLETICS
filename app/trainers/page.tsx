@@ -10,22 +10,22 @@ export default function Page() {
           <span className="num">IRONFORGE</span>
           <h2>MARCUS REED</h2>
           <p>Strength & Conditioning Coach</p>
-          <a className="textLink" href="/#contact">EXPLORE →</a>
+          <a className="textLink" href="/contact">EXPLORE →</a>
         </article>
         <article>
           <span className="num">IRONFORGE</span>
           <h2>AMARA OKAFOR</h2>
           <p>Performance & Personal Training</p>
-          <a className="textLink" href="/#contact">EXPLORE →</a>
+          <a className="textLink" href="/contact">EXPLORE →</a>
         </article>
         <article>
           <span className="num">IRONFORGE</span>
           <h2>DANIEL COLE</h2>
           <p>Boxing & Conditioning Coach</p>
-          <a className="textLink" href="/#contact">EXPLORE →</a>
+          <a className="textLink" href="/contact">EXPLORE →</a>
         </article>
       </section>
-      <a className="btn primary" href="/#membership">START TRAINING →</a>
+      <a className="btn primary" href="/membership">START TRAINING →</a>
     </main>
   );
 }
