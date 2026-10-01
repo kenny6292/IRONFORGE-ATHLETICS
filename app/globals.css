@@ -98,13 +98,12 @@ input,textarea,select{max-width:100%;font-size:16px}
 @media(max-width:700px){.homeIntro{grid-template-columns:1fr;gap:30px;padding:70px 6vw}}
 
 
-/* Wider desktop homepage layout */
+
+/* Slightly wider desktop homepage */
 @media(min-width:901px){
-  .nav{padding-left:4vw;padding-right:4vw}
-  .hero{padding-left:5vw;padding-right:5vw}
-  .heroContent{max-width:1400px;width:100%}
-  .hero h1{max-width:1100px}
-  .lead{max-width:720px}
-  .homeIntro{padding-left:5vw;padding-right:5vw}
-  .homeIntro>div,.homeIntro>p{max-width:680px}
+  .nav{padding-left:3vw;padding-right:3vw}
+  .hero{padding-left:4vw;padding-right:4vw}
+  .heroContent{max-width:1500px;width:100%}
+  .hero h1{max-width:1200px}
+  .homeIntro{padding-left:4vw;padding-right:4vw}
 }
