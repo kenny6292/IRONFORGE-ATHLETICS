@@ -20,7 +20,7 @@ export default async function MemberPage() {
   ]);
 
   const active = memberships?.find(m => m.status === "active") || memberships?.[0];
-  const activePlan = Array.isArray(active?.membership_plans) ? active.membership_plans[0] : active?.membership_plans;
+  const activePlan: any = Array.isArray(active?.membership_plans) ? active.membership_plans[0] : active?.membership_plans;
   const confirmedBookings = bookings?.filter(b => b.status === "confirmed") || [];
   const successfulPayments = payments?.filter(p => p.status === "successful") || [];
   const endsAt = active?.ends_at ? new Date(active.ends_at) : null;
