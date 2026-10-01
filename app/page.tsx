@@ -32,10 +32,19 @@ export default function Home() {
         </div>
       </div>
       <div className="heroStat"><strong>24/7</strong><span>ACCESS AVAILABLE</span></div>
+      <div className="heroMeta">
+        <span>EST. 2026</span><b></b><span>PERFORMANCE FACILITY</span>
+      </div>
+      <div className="heroScroll">SCROLL TO EXPLORE <span>↓</span></div>
     </section>
     <section className="homeIntro">
       <div><p className="eyebrow">IRONFORGE ATHLETICS</p><h2>YOUR TRAINING.<br/><i>YOUR STANDARD.</i></h2></div>
-      <p>Explore programs, live classes, expert trainers, facilities and membership through dedicated pages instead of one long scrolling homepage.</p>
+      <p>Elite-level training, expert coaching and a focused environment built for people who take their progress seriously.</p>
+      <div className="premiumStats">
+        <div><strong>24/7</strong><span>GYM ACCESS</span></div>
+        <div><strong>06+</strong><span>TRAINING PROGRAMS</span></div>
+        <div><strong>01:1</strong><span>COACHING AVAILABLE</span></div>
+      </div>
     </section>
   </main>;
 }
