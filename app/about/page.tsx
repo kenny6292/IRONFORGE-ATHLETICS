@@ -15,7 +15,7 @@ export default function About() {
           <p>Give every member the tools, environment and accountability needed to build strength and confidence.</p>
         </article>
       </section>
-      <a className="btn primary" href="/#membership">EXPLORE MEMBERSHIP →</a>
+      <a className="btn primary" href="/membership">EXPLORE MEMBERSHIP →</a>
     </main>
   );
 }
